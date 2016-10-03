@@ -5,6 +5,13 @@ import com.gojek.enums.VeichleType;
 
 import lombok.Data;
 
+/**
+ * Abstract class to represent the veichle. Extend this class depending upon the
+ * type of veichle.
+ * 
+ * @author shikhill.gupta
+ *
+ */
 @Data
 public abstract class Veichle {
 

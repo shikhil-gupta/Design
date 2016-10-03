@@ -2,6 +2,13 @@ package com.gojek.enums;
 
 import com.gojek.exception.CustomParkingException;
 
+/**
+ * Enum class to represent the type of veichle. please add the new type of
+ * veichle before adding it.
+ * 
+ * @author shikhill.gupta
+ *
+ */
 public enum VeichleType {
 	TWOWHEELER("twowheeler"), FOURWHEELER("fourwheeler");
 

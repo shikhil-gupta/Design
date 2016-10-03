@@ -1,8 +1,11 @@
 package com.gojek.parking;
 
-import lombok.Data;
-
-@Data
+/**
+ * Class to define the Parking slot for car only.
+ * 
+ * @author shikhill.gupta
+ *
+ */
 public class CarParkingSlot extends ParkingSlot {
 
 	public CarParkingSlot(int slotNo, Veichle veichle) {
