@@ -316,7 +316,7 @@ public class ParkingSystemTest extends TestCase {
 
 			inputCommand = "registration_numbers_for_cars_with_colour Black";
 			actualOutput = app1.listOfRegNoOfGivenCarColour(inputCommand);
-			System.out.println("");
+			Assert.assertTrue(false);
 
 		} catch (CustomParkingException ex) {
 			System.out.println(ex.getMessage());
@@ -344,7 +344,25 @@ public class ParkingSystemTest extends TestCase {
 
 			inputCommand = "park KA­-01-­P-­333 White";
 			actualOutput = app1.parkVeichle(inputCommand);
+			Assert.assertTrue(false);
 
+		} catch (CustomParkingException ex) {
+			System.out.println(ex.getMessage());
+			Assert.assertFalse(false);
+		}
+		
+		try {
+			ParkingSystemApp app1 = new ParkingSystemApp();
+			app1.initializeApp();
+			String validInput = "create";
+			app1.createParkingLot(validInput);
+
+			String inputCommand = "park KA­-01-­P-­333 White";
+			String actualOutput = app1.parkVeichle(inputCommand);
+
+			inputCommand = "park KA­-01-­P-­333 White";
+			actualOutput = app1.parkVeichle(inputCommand);
+			Assert.assertTrue(false);
 		} catch (CustomParkingException ex) {
 			System.out.println(ex.getMessage());
 			Assert.assertFalse(false);

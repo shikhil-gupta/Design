@@ -32,7 +32,7 @@ public class ParkingLot {
 	 */
 	Map<String, ParkingSlot> regNoToParkingSlotMap;
 	/**
-	 * Tree map which sort the occupied slot in increasing order.
+	 * Tree map to maintain mapping slotNo to parking slot.
 	 */
 	TreeMap<Integer, ParkingSlot> slotNoToParkingSlotMap;
 
@@ -60,6 +60,12 @@ public class ParkingLot {
 	 * @throws CustomParkingException
 	 */
 	public Boolean initializeParkingLot(int totalSlot) throws CustomParkingException {
+
+		if (isParkingLotInitialized) {
+			throw new CustomParkingException(
+					"CustomParkingException message : parking lot is already initialized. please restart the app if you want to change the parking lot capacity.");
+		}
+
 		this.totalSlot = totalSlot;
 		this.availableSlot = totalSlot;
 		try {
@@ -241,7 +247,8 @@ public class ParkingLot {
 
 	private void checkIsParkingLotInitialized() throws CustomParkingException {
 		if (!isParkingLotInitialized) {
-			throw new CustomParkingException("Parking lot is not initialized yet . please initialize before using it");
+			throw new CustomParkingException(
+					"Parking System is not initialized properly. please initialize before using it");
 		}
 	}
 

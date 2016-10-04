@@ -38,7 +38,7 @@ public class ParkingSystemApp {
 	 * flag to see the is parking system app is being using by providing the
 	 * file of commands.
 	 */
-	private boolean isFileMode;
+	private boolean isFileMode = false;
 
 	/**
 	 * BufferedReader stream to read the input from file in case isFileMode is
@@ -67,7 +67,8 @@ public class ParkingSystemApp {
 	private String outputFilePath;
 
 	/**
-	 * Map to validate the input user against the expected input.
+	 * Map to validate the input user against the expected input and their
+	 * count.
 	 */
 	private static Map<String, Integer> hashMap;
 
@@ -104,13 +105,13 @@ public class ParkingSystemApp {
 			app.initializeApp();
 			app.startApp();
 		} catch (CustomParkingException ex) {
-			app.writeOutput(Arrays
-					.asList("Exception message " + ex.getMessage() + "\n Exception stack Trace" + ex.getStackTrace()));
+			System.out.println("CustomParkingException message " + ex.getMessage() + "\n Exception stack Trace" + ex.getStackTrace());
 		} catch (Throwable ex) {
-			app.writeOutput(Arrays
-					.asList("Exception message " + ex.getMessage() + "\n Exception stack Trace" + ex.getStackTrace()));
+			System.out.println("CustomParkingException message " + ex.getMessage() + "\n Exception stack Trace" + ex.getStackTrace());
 		} finally {
-			app.closeApp();
+			if(app != null) {
+				app.closeApp();
+			}
 		}
 	}
 
@@ -165,53 +166,72 @@ public class ParkingSystemApp {
 	 */
 	public void startApp() throws CustomParkingException {
 
-		try {
-			String inputString = inputReader.readLine();
-			while (!exit && inputString != null) {
+		String inputString = "";
+		while (!exit && inputString != null) {
+			try {
+				System.out.println("Input:");
+				inputString = inputReader.readLine();
+				//System.out.println(inputString);
+				if (inputString == null) {
+					writeOutput(Arrays.asList("End of file is reached. so closing app"));
+					System.out.println("End of file is reached. so closing app");
+					break;
+				}
 				inputString = inputString.trim();
 				String[] expression = inputString.split("\\s+");
-				List<String> resultList = null;
+				List<String> resultList = new ArrayList<>();
 				String output = "";
 				switch (expression[0].toLowerCase()) {
 				case "create_parking_lot":
+					System.out.println("Output:");
 					output = createParkingLot(inputString);
 					resultList = Arrays.asList(output);
 					break;
 				case "park":
+					System.out.println("Output:");
 					output = parkVeichle(inputString);
 					resultList = Arrays.asList(output);
 					break;
 				case "leave":
+					System.out.println("Output:");
 					output = vacateSlot(inputString);
 					resultList = Arrays.asList(output);
 					break;
 				case "status":
+					System.out.println("Output:");
 					resultList = occupiedSlots(inputString);
 					break;
 				case "registration_numbers_for_cars_with_colour":
+					System.out.println("Output:");
 					output = listOfRegNoOfGivenCarColour(inputString);
 					resultList = Arrays.asList(output);
 					break;
 				case "slot_numbers_for_cars_with_colour":
+					System.out.println("Output:");
 					output = getSlotNoOfGivenCarColour(inputString);
 					resultList = Arrays.asList(output);
 					break;
 				case "slot_number_for_registration_number":
+					System.out.println("Output:");
 					output = getSlotNoOfGivenCarReg(inputString);
 					resultList = Arrays.asList(output);
 					break;
 				case "exit":
+					System.out.println("Output:");
 					exit = true;
 					resultList = Arrays.asList();
 					break;
 				default:
-					throw new CustomParkingException("Invalid input exeception");
+					System.out.println("Invalid input. please type exit command to exit from Parking System app");
 				}
 				writeOutput(resultList);
-				inputString = inputReader.readLine();
+			} catch (IOException ex) {
+				exit = true;
+				throw new CustomParkingException("IOException while reading from stream");
+			} catch (CustomParkingException ex) {
+				System.out.println(
+						"Exception message " + ex.getMessage() + " Exception stack trace " + ex.getStackTrace());
 			}
-		} catch (IOException ex) {
-			throw new CustomParkingException("IOException while reading from stream");
 		}
 	}
 
@@ -220,13 +240,15 @@ public class ParkingSystemApp {
 	 */
 
 	public void closeApp() {
-		if (isFileMode) {
+		if (isFileMode && outputWriter != null) {
 			outputWriter.println("ParkingSystemApp Terminated");
 			outputWriter.close();
 		} else {
-			System.out.print("ParkingSystemApp Terminated");
+			System.out.println("ParkingSystemApp Terminated");
 		}
-		parking.close();
+		if(parking != null) {
+			parking.close();
+		}
 		exit = true;
 		isParkingSystemAppInitialized = false;
 		try {
@@ -245,7 +267,7 @@ public class ParkingSystemApp {
 	 * @return String representation of output.
 	 * @throws CustomParkingException
 	 */
-	public String createParkingLot(String inputCommand) throws CustomParkingException {
+	public String createParkingLot(String inputCommand) throws CustomParkingException {	
 		String result = "";
 		String[] expression = getParsedUserInputArray(inputCommand);
 		int totalSlot = Integer.parseInt(expression[1]);
@@ -443,9 +465,9 @@ public class ParkingSystemApp {
 	 */
 
 	private static ParkingSystemApp getParkingSystemInstance(String[] args) throws CustomParkingException {
-		if (args.length == 4) {
-			return new ParkingSystemApp(args[1], args[3]);
-		} else if (args.length == 1) {
+		if (args.length == 2) {
+			return new ParkingSystemApp(args[0], args[1]);
+		} else if (args.length == 0) {
 			return new ParkingSystemApp();
 		}
 		throw new CustomParkingException(
