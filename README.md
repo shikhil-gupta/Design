@@ -1,7 +1,6 @@
 # Parking Design
 
 # since this maven project, please run this command first which will create the runnable jar for you. 
-# i could not attach jar to the attachment due to gmail security reasons.
 
 # mvn clean install
 
